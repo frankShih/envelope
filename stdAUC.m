@@ -16,7 +16,7 @@ function stdAUC(data, tLabel, K)
     end
 
 
-    for n=.1:.2:3.5
+    for n=.1:.2:3
         n
         AUCavg = 0;
         for i=1:100       
@@ -142,19 +142,4 @@ function stdAUC(data, tLabel, K)
    
    
 end
-%}
-
-%{
-stdAUC(s4,0,5)
-stdAUC(s4,1,5)
-stdAUC(s4,2,5)
-stdAUC(s4,3,5)
-stdAUC(ECG200TRAIN,-1,5)
-stdAUC(ECG200TRAIN,1,5)
-stdAUC(ECGFiveDaysTEST,1,5)
-stdAUC(ECGFiveDaysTEST,2,5)
-stdAUC(new1,1,5)
-stdAUC(new1,2,5)
-stdAUC(new1,3,5)
-stdAUC(new1,4,5)
 %}

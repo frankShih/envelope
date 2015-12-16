@@ -1,4 +1,4 @@
-function [bestStdAll, clusterNum] = stdEntropy_multi(data, Lambda_list)
+function [bestStdAll, centroids] = stdEntropy_multi(data, Lambda_list)
 % using each class to build envelope & calculate entropy
 % then use it to determine which std. to use
 % [object value] minimize a=LAMBDA*b, where 'a' is target entropy
@@ -14,19 +14,16 @@ function [bestStdAll, clusterNum] = stdEntropy_multi(data, Lambda_list)
 
 
     if nargin <2
-        Lambda_list=0:5:100;
+        Lambda_list=1:10;
     end
 
-    clusterNum = [];
+    
     std_range=[.1:.1:3];
     bestStdAll = [];
     [~, I] = sort(data(:,1));   data = data(I,:);
-    [m, s, ind] = envelopeBuild_multi(data(:,2:end),data(:,1));    % return mean/std. curve
-    for i=1:length(m)
-        clusterNum = [clusterNum size(m{i},1)];
-    end
+    [m, s, ind, centroids] = envelopeBuild_multi(data(:,2:end),data(:,1));    % return mean/std. curve
     m = cell2mat(m);    s = cell2mat(s);    ind = cell2mat(ind);
-    newData = [ind(:,2)  data(:,2:end)];
+    newData = [ind(:,2)  data(:,2:end)];    %treat multi-cluster as new classes, and use original solution 
     newLabel = unique(newData(:,1));   
     
     for i=1:length(newLabel)

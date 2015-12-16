@@ -1,4 +1,4 @@
-function [sumTE, sumVE, bestC, A] = envelopeTuning(data, best_std, fold, mode, ratio, C)
+function [sumTE, sumVE, bestC] = envelopeTuning(data, best_std, fold, mode, C, A)
 % input
 %   data - with label in first column
 %   best_std - obtain from 'stdEntropy', array of std. (for each class)
@@ -6,11 +6,12 @@ function [sumTE, sumVE, bestC, A] = envelopeTuning(data, best_std, fold, mode, r
 %   mode - different ways for data representation 
 %   ratio - compressed ratio (if needed)
 % output
-%   temp - trainAcc & testAcc correspond to bestC
 %   A - measurement matrix
 % addpath E:\Dropbox\DM_ML\Toolbox\SSVMtoolbox
 addpath E:\Dropbox\DM_ML\Toolbox\libsvm-3.19\matlab
-
+if nargin < 6
+    A= [];
+end
 labels = unique(data(:,1));
 iteration = 10;
 if fold==0
@@ -31,12 +32,11 @@ if fold==0
 end
         
 sumTE=zeros(size(C,2),2);  sumVE=zeros(size(C,2),2);
-A =  randn( fix(size(data(:,2:end),2)*length(labels)/(1/ratio)) , size(data(:,2:end),2)*length(labels)) / sqrt (size(data(2:end,:),2)*length(labels)/(1/ratio) );              
+% A =  randn( fix(size(data(:,2:end),2)*length(labels)/(1/ratio)) , size(data(:,2:end),2)*length(labels)) / sqrt (size(data(2:end,:),2)*length(labels)/(1/ratio) );              
 % measurement matrix = 1/sqrt(m)*rand(m,n)
 %
 for j=1:iteration
     TE=zeros(length(C),2); VE=zeros(length(C),2); 
-%     v_ind = myCVind(size(data,1), fold);
     v_ind = crossvalind('KFold',size(data,1), fold);
     for c=C
         
@@ -46,16 +46,11 @@ for j=1:iteration
                 train1 = data(v_ind~=i, 2:end);         %raw data
                 test1 = data(v_ind==i, 2:end);
             else
-                %{
+                %
                 [m_c, s_c] = envelopeBuild(data(v_ind~=i,2:end), data(v_ind~=i,1));                   
                 train1=envelopeEncode(m_c,s_c,data(v_ind~=i, 2:end), best_std, mode, A);      
                 test1=envelopeEncode(m_c, s_c, data(v_ind==i, 2:end), best_std, mode, A); 
-                %}
                 
-                [m_c, s_c] = envelopeBuild_multi(data(v_ind~=i,2:end), data(v_ind~=i,1), best_std{2});                   
-                train1=envelopeEncode_multi(m_c,s_c,data(v_ind~=i, 2:end), best_std{1}, mode, A);      
-                test1=envelopeEncode_multi(m_c, s_c, data(v_ind==i, 2:end), best_std{1}, mode, A); 
-                %}
             end
             model = svmtrain(data(v_ind~=i, 1), train1, ['-t 0 -c ' sprintf('%f', c)]);      
 
@@ -77,24 +72,21 @@ sumTE = sumTE/iteration;
 sumVE = sumVE/iteration;
 [~, temp ] = max(sumVE(:,2)) ;
 bestC = sumTE(temp, 1);
-temp = [sumTE(temp, 2) sumVE(temp, 2)];
+
 
 %
-f = figure; 
+% plot the result if cross validation 
+f= figure;
 hold on;
+temp = [sumTE(temp, 2) sumVE(temp, 2)];
 plot(log2(C),sumTE(:,2), 'b', 'LineWidth', 2 );
 plot(log2(C),sumVE(:,2), 'r', 'LineWidth', 2 );
-title([num2str(fold) ' folds,  mode ' num2str(mode) ', ratio ' num2str(ratio) '  best: ' num2str(temp)]);
-legend('trainAcc', 'testAcc');
+title([num2str(fold) ' folds,  mode ' num2str(mode)  ',  best: ' num2str(temp)]);
+legend('trainingAcc', 'validationAcc');
 ylim([0 100])
 xlabel('log2(C)')
 % saveas(f,['E:\Dropbox\Graduation\envelope\Cinc1_mode_' num2str(mode) 'ratio_' num2str(ratio) ],'fig');
 
 %}
 end
-
-
-
-
-
  

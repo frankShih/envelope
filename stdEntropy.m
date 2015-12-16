@@ -14,7 +14,7 @@ function [bestStdAll] = stdEntropy(data, Lambda_list)
 
 %     
     if nargin <2
-        Lambda_list=1:10;
+        Lambda_list=1:3;
     end
     label = unique(data(:,1));   
     bestStdAll = [];
@@ -48,11 +48,13 @@ function [bestStdAll] = stdEntropy(data, Lambda_list)
     end
     %{
     figure
-    title('entropy')
+    
     plot(all_entropy');
     hold
     legend(num2str(label));
-%     pause
+    ylabel('object value');
+    xlabel('#std *10')
+    title(['entropy  label = ' num2str(label(i)) ])
     %}
     bestStdList = [];
     for Lambda_index=1:length(Lambda_list)
@@ -70,8 +72,8 @@ function [bestStdAll] = stdEntropy(data, Lambda_list)
         
          [~, sort_obj_index]=sort(object_value);
          bestStdList = [bestStdList std_range(sort_obj_index(1))];
-%          plot(sort_obj_index(1),0:.001:2,'k');
-%          pause()
+
+%         text(sort_obj_index(1)-3, Lambda*.18, ['\lambda = ' num2str(Lambda) ' std = ' num2str(std_range(sort_obj_index(1)))]); 
     end
     bestStdAll = [bestStdAll; bestStdList];
     end
