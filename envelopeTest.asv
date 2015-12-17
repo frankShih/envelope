@@ -26,7 +26,7 @@ function [ accuracy, bestC ] = envelopeTest( trainData, trainLabel, testData, te
         train1=envelopeEncode(m_c,s_c, trainData, bestStdList, mode);      
         test1=envelopeEncode(m_c, s_c, testData, bestStdList, mode); 
         train1 = train1(:,length(train1)/2+1:end);
-        test1 = test1(:,length(test1)/2+1:end);
+                test1 = test1(:,length(test1)/2+1:end);
         model = svmtrain(trainLabel, train1, ['-t 0 -c ' sprintf('%f', bestC)]);          
         [~, accuracy, ~] = svmpredict(testLabel, test1, model); 
         toc

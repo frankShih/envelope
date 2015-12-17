@@ -29,14 +29,13 @@ function [ mean_curve, std_curve ] = envelopeBuild( input_data, input_label )
 % the plot to show built envelopes and mean curve of other classes
     for i =1:size(label,1)
         figure;        
-%          ylim([-50 50]);
 %          plot(mean_curve(i,:),'LineWidth',2)
         hold
 %         plot(mean_curve(i,:)+1*std_curve(i,:),'r','LineWidth',2)
 %         plot(mean_curve(i,:)-1*std_curve(i,:),'r','LineWidth',2)
-%         fill([1:size(input_data,2), fliplr(1:size(input_data,2)) ], [mean_curve(i,:)+2*std_curve(i,:), fliplr(mean_curve(i,:)-2*std_curve(i,:))], [.7 .7 .7] ,'EdgeColor','none')
-        fill([1:size(input_data,2), fliplr(1:size(input_data,2)) ], [mean_curve(i,:)+1*std_curve(i,:), fliplr(mean_curve(i,:)-1*std_curve(i,:))], [.8 .8 .8] ,'EdgeColor','none')
-%        
+        fill([1:size(input_data,2), fliplr(1:size(input_data,2)) ], [mean_curve(i,:)+2*std_curve(i,:), fliplr(mean_curve(i,:)-2*std_curve(i,:))], [.7 .7 .7] ,'EdgeColor','none')
+        fill([1:size(input_data,2), fliplr(1:size(input_data,2)) ], [mean_curve(i,:)+1*std_curve(i,:), fliplr(mean_curve(i,:)-1*std_curve(i,:))], [.9 .9 .9] ,'EdgeColor','none')
+%       
         for j= 1:size(label,1)
             if j==i
                 continue
@@ -51,8 +50,8 @@ function [ mean_curve, std_curve ] = envelopeBuild( input_data, input_label )
         end
         %}
         title(['label = ' num2str(label(i))]);
-        
+    
     end
-    %}
+    %}   
 end
 

@@ -50,8 +50,8 @@ for j=1:iteration
                 [m_c, s_c] = envelopeBuild(data(v_ind~=i,2:end), data(v_ind~=i,1));                   
                 train1=envelopeEncode(m_c,s_c,data(v_ind~=i, 2:end), best_std, mode, A);      
                 test1=envelopeEncode(m_c, s_c, data(v_ind==i, 2:end), best_std, mode, A); 
-%                 train1 = train1(:,length(train1)/2+1:end);
-%                 test1 = test1(:,length(test1)/2+1:end);
+                train1 = train1(:,)
+                
             end
             model = svmtrain(data(v_ind~=i, 1), train1, ['-t 0 -c ' sprintf('%f', c)]);      
 
